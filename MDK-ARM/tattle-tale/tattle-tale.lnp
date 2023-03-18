@@ -1,0 +1,25 @@
+--cpu Cortex-M0
+"tattle-tale\startup_stm32f072xb.o"
+"tattle-tale\main.o"
+"tattle-tale\stm32f0xx_it.o"
+"tattle-tale\stm32f0xx_hal_msp.o"
+"tattle-tale\stm32f0xx_hal_tim.o"
+"tattle-tale\stm32f0xx_hal_tim_ex.o"
+"tattle-tale\stm32f0xx_hal_rcc.o"
+"tattle-tale\stm32f0xx_hal_rcc_ex.o"
+"tattle-tale\stm32f0xx_hal.o"
+"tattle-tale\stm32f0xx_hal_i2c.o"
+"tattle-tale\stm32f0xx_hal_i2c_ex.o"
+"tattle-tale\stm32f0xx_hal_gpio.o"
+"tattle-tale\stm32f0xx_hal_dma.o"
+"tattle-tale\stm32f0xx_hal_cortex.o"
+"tattle-tale\stm32f0xx_hal_pwr.o"
+"tattle-tale\stm32f0xx_hal_pwr_ex.o"
+"tattle-tale\stm32f0xx_hal_flash.o"
+"tattle-tale\stm32f0xx_hal_flash_ex.o"
+"tattle-tale\stm32f0xx_hal_exti.o"
+"tattle-tale\system_stm32f0xx.o"
+--strict --scatter "tattle-tale\tattle-tale.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "tattle-tale.map" -o tattle-tale\tattle-tale.axf

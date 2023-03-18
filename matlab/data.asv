@@ -1,0 +1,68 @@
+%% clear all
+
+clc; clear all; close all;
+
+%% Unfiltered Wisker data
+
+whisker_relaxed = csvread("relaxed.csv");
+whisker_concave = csvread("bent-concave.csv");
+whisker_convex = csvread("bent-convex.csv");
+
+
+figure
+hold on;
+plot(whisker_relaxed)
+plot(whisker_concave)
+plot(whisker_convex)
+title("Whiskers performance")
+
+legend("relaxed","concave","convex")
+
+%% Filtered Wisker data
+n = 100;
+filter = (1-1/n).^(0:n)/sum((1-1/n).^(0:n));
+
+relaxed_filtered = conv(whisker_relaxed,filter);
+concave_filtered = conv(whisker_concave,filter);
+convex_filtered = conv(whisker_convex,filter);
+
+
+figure
+hold on;
+subplot(2,2,1)
+plot(lowPassFilter(whisker_relaxed,100))
+plot(lowPassFilter(whisker_concave,100))
+plot(lowPassFilter(whisker_convex,100))
+title("Whiskers performance")
+subplot(2,2,2)
+plot(lowPassFilter(whisker_relaxed,100))
+plot(lowPassFilter(whisker_concave,100))
+plot(lowPassFilter(whisker_convex,100))
+title("Whiskers performance")
+subplot(2,2,1)
+plot(lowPassFilter(whisker_relaxed,100))
+plot(lowPassFilter(whisker_concave,100))
+plot(lowPassFilter(whisker_convex,100))
+title("Whiskers performance")
+subplot(2,2,1)
+plot(lowPassFilter(whisker_relaxed,100))
+plot(lowPassFilter(whisker_concave,100))
+plot(lowPassFilter(whisker_convex,100))
+title("Whiskers performance")
+
+legend("relaxed","concave","convex")
+
+%% Photo Resistor data
+
+phores_ambiance = csvread("phores-ambiance.csv");
+phores_blocked = csvread("phores-blocked.csv");
+phores_white = csvread("phores-white-paper.csv");
+
+figure
+hold on;
+plot(phores_ambiance)
+plot(phores_blocked)
+plot(phores_white)
+title("photoresistor performance")
+
+legend("ambiance","blocked","white")

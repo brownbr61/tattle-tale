@@ -1,0 +1,422 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>whisker_data</title><meta name="generator" content="MATLAB 9.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-03-17"><meta name="DC.source" content="whisker_data.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">clear all</a></li><li><a href="#2">Unfiltered Whisker Data</a></li><li><a href="#3">Unfiltered Whisker Data Statistics</a></li><li><a href="#4">Filtered Whisker Data - Geometric Filter</a></li><li><a href="#5">Filtered Whisker Data - Moving Mean</a></li><li><a href="#6">Geometric - Moving Mean comparison</a></li><li><a href="#7">Filtered Whisker Data - Computationally-Cheap</a></li></ul></div><h2 id="1">clear all</h2><pre class="codeinput">clc; clear; close <span class="string">all</span>;
+</pre><h2 id="2">Unfiltered Whisker Data</h2><pre class="codeinput">whisker_relaxed = csvread(<span class="string">"relaxed.csv"</span>);
+whisker_concave = csvread(<span class="string">"bent-concave.csv"</span>);
+whisker_convex = csvread(<span class="string">"bent-convex.csv"</span>);
+
+
+figure
+hold <span class="string">on</span>;
+plot(whisker_relaxed)
+plot(whisker_concave)
+plot(whisker_convex)
+title(<span class="string">"Whiskers performance"</span>)
+
+legend(<span class="string">"relaxed"</span>,<span class="string">"concave"</span>,<span class="string">"convex"</span>,<span class="string">"Location"</span>,<span class="string">"southoutside"</span>)
+</pre><img vspace="5" hspace="5" src="whisker_data_01.png" alt=""> <h2 id="3">Unfiltered Whisker Data Statistics</h2><pre class="codeinput">figure
+hold <span class="string">on</span>;
+
+
+relaxedMean = mean(whisker_relaxed);
+relaxedStd = std(whisker_relaxed);
+concaveMean = mean(whisker_concave);
+concaveStd = std(whisker_concave);
+convexMean = mean(whisker_convex);
+convexStd = std(whisker_convex);
+
+subplot(3,1,1)
+histogram(whisker_relaxed)
+title(<span class="string">"Relaxed Whisker Measurement Distribution"</span>)
+subplot(3,1,2)
+histogram(whisker_concave)
+title(<span class="string">"Concave Whisker Measurement Distribution"</span>)
+subplot(3,1,3)
+histogram(whisker_convex)
+title(<span class="string">"Convex Whisker Measurement Distribution"</span>)
+
+disp(<span class="string">"Unfiltered Whisker Data Statistics:"</span>)
+disp(<span class="string">"relaxed whisker:"</span>)
+disp(strcat(<span class="string">"  mean: "</span>,string(relaxedMean),<span class="string">"   std: "</span>, string(relaxedStd)))
+disp(<span class="string">"relaxed concave bend:"</span>)
+disp(strcat(<span class="string">"  mean: "</span>,string(concaveMean),<span class="string">"   std: "</span>, string(concaveStd)))
+disp(<span class="string">"relaxed convex bend:"</span>)
+disp(strcat(<span class="string">"  mean: "</span>,string(convexMean),<span class="string">"   std: "</span>, string(convexStd)))
+
+disp(<span class="string">"Given that std(mean(samples)) = 1/sqrt(nSamples)*std(samples), we can differentiate the systems with 97% accuracy with the following sample counts:"</span>)
+
+zScoreGoal = 2; <span class="comment">% this gets a bit better than 97% (assuming ideal gaussian filters)</span>
+concaveSamples = (zScoreGoal * concaveStd / (concaveMean - relaxedMean))^2; <span class="comment">% concave &amp; relaxed have the closest means</span>
+disp(strcat(<span class="string">"  min(concave samples): "</span>,string(concaveSamples)))
+</pre><pre class="codeoutput">Unfiltered Whisker Data Statistics:
+relaxed whisker:
+  mean: 110.8195   std: 0.9641
+relaxed concave bend:
+  mean: 111.0114   std: 0.98412
+relaxed convex bend:
+  mean: 110.2471   std: 0.97506
+Given that std(mean(samples)) = 1/sqrt(nSamples)*std(samples), we can differentiate the systems with 97% accuracy with the following sample counts:
+  min(concave samples): 105.1457
+</pre><img vspace="5" hspace="5" src="whisker_data_02.png" alt=""> <h2 id="4">Filtered Whisker Data - Geometric Filter</h2><pre>- First round of samples; simplest filter I could think of</pre><pre class="codeinput">figure
+hold <span class="string">on</span>;
+n = [128,256,512,1024];
+title(<span class="string">"Geometrically-Filtered Whisker Data Output"</span>)
+<span class="keyword">for</span> i = 1:length(n)
+  subplot(3,2,i)
+  hold <span class="string">on</span>;
+  plot(lowPassFilter(whisker_relaxed,n(i)))
+  plot(lowPassFilter(whisker_concave,n(i)))
+  plot(lowPassFilter(whisker_convex,n(i)))
+  title(strcat(<span class="string">"n = "</span>,string(n(i))))
+<span class="keyword">end</span>
+legend(<span class="string">"relaxed"</span>,<span class="string">"concave"</span>,<span class="string">"convex"</span>,<span class="string">"Location"</span>,<span class="string">"southoutside"</span>)
+
+relaxedGeometricError = zeros([1 length(n)]);
+concaveGeometricError = zeros([1 length(n)]);
+convexGeometricError  = zeros([1 length(n)]);
+relaxedConcaveLine = mean([relaxedMean concaveMean]); <span class="comment">% Assuming nearly-equal std</span>
+relaxedConvexLine  = mean([relaxedMean convexMean ]); <span class="comment">% Assuming nearly-equal std</span>
+<span class="keyword">for</span> i = 1:length(n)
+  relaxedWhiskerMean = lowPassFilter(whisker_relaxed,n(i));
+  concaveWhiskerMean = lowPassFilter(whisker_concave,n(i));
+  convexWhiskerMean  = lowPassFilter(whisker_convex,n(i));
+  relaxedGeometricError(i) = getBayesianError(relaxedWhiskerMean,relaxedConvexLine,relaxedConcaveLine);
+  concaveGeometricError(i) = getBayesianError(concaveWhiskerMean,relaxedConcaveLine,256);
+  convexGeometricError(i)  = getBayesianError(convexWhiskerMean,0,relaxedConcaveLine);
+<span class="keyword">end</span>
+
+figure
+hold <span class="string">on</span>;
+title(<span class="string">"Geometric Filtered Whisker Data Output Error"</span>)
+plot(n,relaxedGeometricError);
+plot(n,concaveGeometricError);
+plot(n,convexGeometricError);
+legend(<span class="string">"Relaxed Whisker Error"</span>,<span class="string">"Concave Whisker Error"</span>,<span class="string">"Convex Whisker Error"</span>);
+</pre><img vspace="5" hspace="5" src="whisker_data_03.png" alt=""> <img vspace="5" hspace="5" src="whisker_data_04.png" alt=""> <h2 id="5">Filtered Whisker Data - Moving Mean</h2><p>this can be implemented fairly easily w/ an array of size n.  sum -= array.pop() - newData;  array.plop(newData);</p><pre class="codeinput">figure
+hold <span class="string">on</span>;
+n = [128,256,512,1024];
+title(<span class="string">"Moving Mean Filtered Whisker Data Output"</span>)
+<span class="keyword">for</span> i = 1:length(n)
+  subplot(2,2,i)
+  hold <span class="string">on</span>;
+  plot(movmean(whisker_relaxed,n(i)))
+  plot(movmean(whisker_concave,n(i)))
+  plot(movmean(whisker_convex,n(i)))
+  title(strcat(<span class="string">"n = "</span>,string(n(i))))
+<span class="keyword">end</span>
+legend(<span class="string">"relaxed"</span>,<span class="string">"concave"</span>,<span class="string">"convex"</span>,<span class="string">"Location"</span>,<span class="string">"southeast"</span>)
+
+relaxedMovingMeanError = zeros([1 length(n)]);
+concaveMovingMeanError = zeros([1 length(n)]);
+convexMovingMeanError  = zeros([1 length(n)]);
+relaxedConcaveLine = mean([relaxedMean concaveMean]); <span class="comment">% Assuming nearly-equal std</span>
+relaxedConvexLine  = mean([relaxedMean convexMean ]); <span class="comment">% Assuming nearly-equal std</span>
+<span class="keyword">for</span> i = 1:length(n)
+  relaxedWhiskerMean = movmean(whisker_relaxed,n(i));
+  concaveWhiskerMean = movmean(whisker_concave,n(i));
+  convexWhiskerMean  = movmean(whisker_convex,n(i));
+  relaxedMovingMeanError(i) = getBayesianError(relaxedWhiskerMean,relaxedConvexLine,relaxedConcaveLine);
+  concaveMovingMeanError(i) = getBayesianError(concaveWhiskerMean,relaxedConcaveLine,256);
+  convexMovingMeanError(i)  = getBayesianError(convexWhiskerMean,0,relaxedConcaveLine);
+<span class="keyword">end</span>
+
+figure
+hold <span class="string">on</span>;
+title(<span class="string">"Moving Mean Filtered Whisker Data Output Error"</span>)
+plot(n,relaxedMovingMeanError);
+plot(n,concaveMovingMeanError);
+plot(n,convexMovingMeanError);
+legend(<span class="string">"Relaxed Whisker Error"</span>,<span class="string">"Concave Whisker Error"</span>,<span class="string">"Convex Whisker Error"</span>);
+</pre><img vspace="5" hspace="5" src="whisker_data_05.png" alt=""> <img vspace="5" hspace="5" src="whisker_data_06.png" alt=""> <h2 id="6">Geometric - Moving Mean comparison</h2><pre class="codeinput">n = [128,256,512,1024];
+
+figure;
+title(<span class="string">"Geometric vs Moving Mean Error Comparison"</span>)
+subplot(1,2,1)
+hold <span class="string">on</span>
+plot(n, relaxedMovingMeanError);
+plot(n, relaxedGeometricError);
+legend(<span class="string">"Moving Mean Error"</span>, <span class="string">"Geometric Error"</span>)
+
+subplot(1,2,2)
+hold <span class="string">on</span>
+plot(n, concaveMovingMeanError);
+plot(n, concaveGeometricError);
+legend(<span class="string">"Moving Mean Error"</span>, <span class="string">"Geometric Error"</span>)
+
+disp(<span class="string">"It seems like a moving mean is a better filter than a geometric filter"</span>)
+</pre><pre class="codeoutput">It seems like a moving mean is a better filter than a geometric filter
+</pre><img vspace="5" hspace="5" src="whisker_data_07.png" alt=""> <h2 id="7">Filtered Whisker Data - Computationally-Cheap</h2><pre>- Since multiplication/division is expensive, divide by power of two (bit shift)</pre><pre class="codeinput">figure
+hold <span class="string">on</span>;
+n = [5,7,8,9];
+title(<span class="string">"Quick-Filtered Whisker Data Output"</span>)
+<span class="keyword">for</span> i = 1:length(n)
+  subplot(3,2,i)
+  hold <span class="string">on</span>;
+  plot(quickFilter(whisker_relaxed,n(i)))
+  plot(quickFilter(whisker_concave,n(i)))
+  plot(quickFilter(whisker_convex,n(i)))
+  title(strcat(<span class="string">"n = "</span>,string(n(i))))
+<span class="keyword">end</span>
+legend(<span class="string">"relaxed"</span>,<span class="string">"concave"</span>,<span class="string">"convex"</span>,<span class="string">"Location"</span>,<span class="string">"southeast"</span>)
+</pre><img vspace="5" hspace="5" src="whisker_data_08.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2022a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% clear all
+
+clc; clear; close all;
+
+%% Unfiltered Whisker Data
+
+whisker_relaxed = csvread("relaxed.csv");
+whisker_concave = csvread("bent-concave.csv");
+whisker_convex = csvread("bent-convex.csv");
+
+
+figure
+hold on;
+plot(whisker_relaxed)
+plot(whisker_concave)
+plot(whisker_convex)
+title("Whiskers performance")
+
+legend("relaxed","concave","convex","Location","southoutside")
+
+%% Unfiltered Whisker Data Statistics
+figure
+hold on;
+
+
+relaxedMean = mean(whisker_relaxed);
+relaxedStd = std(whisker_relaxed);
+concaveMean = mean(whisker_concave);
+concaveStd = std(whisker_concave);
+convexMean = mean(whisker_convex);
+convexStd = std(whisker_convex);
+
+subplot(3,1,1)
+histogram(whisker_relaxed)
+title("Relaxed Whisker Measurement Distribution")
+subplot(3,1,2)
+histogram(whisker_concave)
+title("Concave Whisker Measurement Distribution")
+subplot(3,1,3)
+histogram(whisker_convex)
+title("Convex Whisker Measurement Distribution")
+
+disp("Unfiltered Whisker Data Statistics:")
+disp("relaxed whisker:")
+disp(strcat("  mean: ",string(relaxedMean),"   std: ", string(relaxedStd)))
+disp("relaxed concave bend:")
+disp(strcat("  mean: ",string(concaveMean),"   std: ", string(concaveStd)))
+disp("relaxed convex bend:")
+disp(strcat("  mean: ",string(convexMean),"   std: ", string(convexStd)))
+
+disp("Given that std(mean(samples)) = 1/sqrt(nSamples)*std(samples), we can differentiate the systems with 97% accuracy with the following sample counts:")
+
+zScoreGoal = 2; % this gets a bit better than 97% (assuming ideal gaussian filters)
+concaveSamples = (zScoreGoal * concaveStd / (concaveMean - relaxedMean))^2; % concave & relaxed have the closest means
+disp(strcat("  min(concave samples): ",string(concaveSamples)))
+
+%% Filtered Whisker Data - Geometric Filter
+%  - First round of samples; simplest filter I could think of
+
+figure
+hold on;
+n = [128,256,512,1024];
+title("Geometrically-Filtered Whisker Data Output")
+for i = 1:length(n)
+  subplot(3,2,i)
+  hold on;
+  plot(lowPassFilter(whisker_relaxed,n(i)))
+  plot(lowPassFilter(whisker_concave,n(i)))
+  plot(lowPassFilter(whisker_convex,n(i)))
+  title(strcat("n = ",string(n(i))))
+end
+legend("relaxed","concave","convex","Location","southoutside")
+
+relaxedGeometricError = zeros([1 length(n)]);
+concaveGeometricError = zeros([1 length(n)]);
+convexGeometricError  = zeros([1 length(n)]);
+relaxedConcaveLine = mean([relaxedMean concaveMean]); % Assuming nearly-equal std
+relaxedConvexLine  = mean([relaxedMean convexMean ]); % Assuming nearly-equal std
+for i = 1:length(n)
+  relaxedWhiskerMean = lowPassFilter(whisker_relaxed,n(i));
+  concaveWhiskerMean = lowPassFilter(whisker_concave,n(i));
+  convexWhiskerMean  = lowPassFilter(whisker_convex,n(i));
+  relaxedGeometricError(i) = getBayesianError(relaxedWhiskerMean,relaxedConvexLine,relaxedConcaveLine);
+  concaveGeometricError(i) = getBayesianError(concaveWhiskerMean,relaxedConcaveLine,256);
+  convexGeometricError(i)  = getBayesianError(convexWhiskerMean,0,relaxedConcaveLine);
+end
+
+figure
+hold on;
+title("Geometric Filtered Whisker Data Output Error")
+plot(n,relaxedGeometricError);
+plot(n,concaveGeometricError);
+plot(n,convexGeometricError);
+legend("Relaxed Whisker Error","Concave Whisker Error","Convex Whisker Error");
+
+%% Filtered Whisker Data - Moving Mean
+% this can be implemented fairly easily w/ an array of size n.
+%  sum -= array.pop() - newData;
+%  array.plop(newData);
+
+figure
+hold on;
+n = [128,256,512,1024];
+title("Moving Mean Filtered Whisker Data Output")
+for i = 1:length(n)
+  subplot(2,2,i)
+  hold on;
+  plot(movmean(whisker_relaxed,n(i)))
+  plot(movmean(whisker_concave,n(i)))
+  plot(movmean(whisker_convex,n(i)))
+  title(strcat("n = ",string(n(i))))
+end
+legend("relaxed","concave","convex","Location","southeast")
+
+relaxedMovingMeanError = zeros([1 length(n)]);
+concaveMovingMeanError = zeros([1 length(n)]);
+convexMovingMeanError  = zeros([1 length(n)]);
+relaxedConcaveLine = mean([relaxedMean concaveMean]); % Assuming nearly-equal std
+relaxedConvexLine  = mean([relaxedMean convexMean ]); % Assuming nearly-equal std
+for i = 1:length(n)
+  relaxedWhiskerMean = movmean(whisker_relaxed,n(i));
+  concaveWhiskerMean = movmean(whisker_concave,n(i));
+  convexWhiskerMean  = movmean(whisker_convex,n(i));
+  relaxedMovingMeanError(i) = getBayesianError(relaxedWhiskerMean,relaxedConvexLine,relaxedConcaveLine);
+  concaveMovingMeanError(i) = getBayesianError(concaveWhiskerMean,relaxedConcaveLine,256);
+  convexMovingMeanError(i)  = getBayesianError(convexWhiskerMean,0,relaxedConcaveLine);
+end
+
+figure
+hold on;
+title("Moving Mean Filtered Whisker Data Output Error")
+plot(n,relaxedMovingMeanError);
+plot(n,concaveMovingMeanError);
+plot(n,convexMovingMeanError);
+legend("Relaxed Whisker Error","Concave Whisker Error","Convex Whisker Error");
+
+%% Geometric - Moving Mean comparison
+n = [128,256,512,1024];
+
+figure;
+title("Geometric vs Moving Mean Error Comparison")
+subplot(1,2,1)
+hold on
+plot(n, relaxedMovingMeanError);
+plot(n, relaxedGeometricError);
+legend("Moving Mean Error", "Geometric Error")
+
+subplot(1,2,2)
+hold on
+plot(n, concaveMovingMeanError);
+plot(n, concaveGeometricError);
+legend("Moving Mean Error", "Geometric Error")
+
+disp("It seems like a moving mean is a better filter than a geometric filter")
+
+%% Filtered Whisker Data - Computationally-Cheap
+%  - Since multiplication/division is expensive, divide by power of two (bit shift)
+
+figure
+hold on;
+n = [5,7,8,9];
+title("Quick-Filtered Whisker Data Output")
+for i = 1:length(n)
+  subplot(3,2,i)
+  hold on;
+  plot(quickFilter(whisker_relaxed,n(i)))
+  plot(quickFilter(whisker_concave,n(i)))
+  plot(quickFilter(whisker_convex,n(i)))
+  title(strcat("n = ",string(n(i))))
+end
+legend("relaxed","concave","convex","Location","southeast")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>
