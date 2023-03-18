@@ -11,6 +11,7 @@ concave = csvread("whisker-short-length-concave.csv");
 convex = csvread("whisker-short-length-convex.csv");
 testData = csvread("whisker-short-length-test.csv");
 convexTest = csvread("whisker-short-length-test-convex.csv");
+demoVideo = csvread("whisker-demo.csv");
 
 figure;
 hold on;
@@ -22,6 +23,7 @@ plot(movmean(concave,n))
 plot(movmean(convex,n))
 plot(movmean(testData,n))
 plot(movmean(convexTest,n))
+plot(movmean(demoVideo,n))
 title("Test Data compared to different measures")
 
-legend("relaxed","relaxed1","relaxed2","concave","convex","testData","convexTest");
+legend("relaxed","relaxed1","relaxed2","concave","convex","testData","convexTest","demoVideo");
